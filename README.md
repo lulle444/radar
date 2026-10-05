@@ -9,6 +9,8 @@ function; no build step. Run locally with `npx vercel dev`.
   - holders: each chain's Blockscout (`robinhoodchain.blockscout.com`, `base.blockscout.com`) for the 20 deepest tokens:
     the deployer (sender of the creation transaction, so launchpad factories don't count), its share of supply,
     the top-10 wallet share (contracts and burn addresses excluded), holder count, burned and pooled share.
+  - the public explorers answer 403 to server requests, so set `BLOCKSCOUT_API_KEY` (free at dev.blockscout.com) in
+    Vercel; requests then go to Blockscout's PRO API, `api.blockscout.com/{chainId}/api/v2` (4663 Robinhood Chain, 8453 Base).
   - launchpads are recognised from the DEX name (`launchpads` patterns per chain in `lib/launches.js`).
 - `index.html` + `app.js` + `style.css`: chain switch (`?chain=base`), filters, a row per token with a detail panel
   listing why it scored what it did. Refreshes every minute and highlights tokens that just appeared.

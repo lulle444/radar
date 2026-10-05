@@ -117,7 +117,9 @@ function render(){
   const d = state.data, failed = d.tried && d.checked < d.tried && (d.holderErrors || []).length;
   set("note", rows.length ? `${rows.length} of ${d.launches.length} new tokens shown. Tap a row for details.` : "");
   $("warn").hidden = !failed;
-  if (failed) set("warn", `Holder lookups failed for ${d.tried - d.checked} of ${d.tried} tokens, so deployer and top-10 shares are missing: ${d.holderErrors.join(" · ")}`);
+  if (failed) set("warn", d.needsKey
+    ? "Deployer and top-10 shares are missing: the public Blockscout explorer turns away server requests. Set BLOCKSCOUT_API_KEY (free at dev.blockscout.com) in Vercel to switch on holder checks."
+    : `Holder lookups failed for ${d.tried - d.checked} of ${d.tried} tokens, so deployer and top-10 shares are missing: ${d.holderErrors.join(" · ")}`);
   if (!rows.length){ $("rows").innerHTML = `<tr><td colspan="9" class="empty">No launches match these filters.</td></tr>`; return; }
   $("rows").innerHTML = rows.map(l => {
     const ratio = l.buys1h != null && l.sells1h != null ? `${l.buys1h} / ${l.sells1h}` : "–";
