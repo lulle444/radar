@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Launch Radar</title>
+<meta name="description" content="Every new token on Robinhood Chain and Base as it launches, with a rug score from who holds the supply.">
+<meta property="og:title" content="Launch Radar">
+<meta property="og:description" content="Every new token on Robinhood Chain and Base as it launches, with a rug score from who holds the supply.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230E1116'/%3E%3Ccircle cx='16' cy='16' r='9' fill='none' stroke='%2337D39B' stroke-width='2'/%3E%3Cpath d='M16 16 24 9' stroke='%2337D39B' stroke-width='2.4' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='16' r='2.4' fill='%2337D39B'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="top">
+  <a class="logo" href="/" aria-label="Launch Radar home">
+    <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="11" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="16" cy="16" r="5.5" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".5"/><path d="M16 16 25 8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><circle cx="16" cy="16" r="2.2" fill="currentColor"/></svg>
+    Launch Radar
+  </a>
+  <div class="chains" role="group" aria-label="Chain">
+    <button type="button" data-chain="robinhood" aria-pressed="true">Robinhood Chain</button>
+    <button type="button" data-chain="base" aria-pressed="false">Base</button>
+  </div>
+  <span class="status"><span class="dot" id="dot"></span><span id="status">Loading…</span></span>
+</header>
+
+<main>
+  <section class="intro">
+    <h1>New tokens, the moment they launch</h1>
+    <p>Every new pool on <b id="chainName">Robinhood Chain</b>, newest first. Each token gets a rug score from who holds its supply: how much the deployer kept, how concentrated the top wallets are, and how thin the liquidity is.</p>
+  </section>
+
+  <section class="tiles" aria-label="Summary">
+    <div><small>New tokens</small><strong id="tCount">–</strong><span id="tCountSub">&nbsp;</span></div>
+    <div><small>On launchpads</small><strong id="tPads">–</strong><span id="tPadsSub">&nbsp;</span></div>
+    <div><small>High risk</small><strong id="tHigh">–</strong><span id="tHighSub">&nbsp;</span></div>
+    <div><small>24h volume</small><strong id="tVol">–</strong><span id="tVolSub">&nbsp;</span></div>
+  </section>
+
+  <section class="panel" aria-labelledby="feedH">
+    <div class="bar">
+      <h2 id="feedH">Launch feed</h2>
+      <div class="filters">
+        <label class="check"><input type="checkbox" id="padsOnly"> Launchpads only</label>
+        <label class="check"><input type="checkbox" id="hideHigh"> Hide high risk</label>
+        <label>Min. liquidity
+          <select id="minLiq">
+            <option value="0">Any</option>
+            <option value="1000" selected>$1k</option>
+            <option value="10000">$10k</option>
+            <option value="50000">$50k</option>
+          </select>
+        </label>
+        <input type="search" id="q" placeholder="Search token or address" aria-label="Search token or address">
+      </div>
+    </div>
+    <div class="tablebox">
+      <table>
+        <thead><tr>
+          <th>Token</th><th>Age</th><th class="r">Market cap</th><th class="r">Liquidity</th>
+          <th class="r">1h</th><th class="r">Buys / sells 1h</th><th class="r">Deployer</th><th class="r">Top 10</th><th>Risk</th>
+        </tr></thead>
+        <tbody id="rows"><tr><td colspan="9" class="empty">Loading launches…</td></tr></tbody>
+      </table>
+    </div>
+    <p class="note" id="note"></p>
+  </section>
+
+  <section class="how" aria-labelledby="howH">
+    <h2 id="howH">How the rug score works</h2>
+    <p>Points add up to a score from 0 to 100. Under 25 is low, 25–49 medium, 50 and up high. It is a quick screen, not a verdict: a low score doesn’t make a token safe.</p>
+    <ul>
+      <li><b>Deployer bag</b>: +30 if the wallet that launched the token still holds over 10%, +15 over 5%.</li>
+      <li><b>Concentration</b>: +25 if the ten biggest wallets hold over half the supply, +12 over 30%. Pools, bonding curves, lockers and burn addresses don’t count as wallets.</li>
+      <li><b>Liquidity</b>: +20 under $10k, +10 under $50k, and +10 if liquidity is under 2% of market cap.</li>
+      <li><b>Activity</b>: +15 if sells outnumber buys 2:1 in the last hour, +15 if the price fell over 50% in an hour, +10 for fewer than 50 holders, +10 in the first hour.</li>
+    </ul>
+    <p class="muted">Pools from GeckoTerminal, holders from each chain’s Blockscout explorer. Holders are checked for the 20 deepest new tokens on each refresh. Not financial advice.</p>
+  </section>
+</main>
+
+<footer class="foot"><span>Launch Radar · Robinhood Chain &amp; Base</span><span id="updated"></span></footer>
+<script src="/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+{
+  "name": "radar",
+  "private": true,
+  "description": "New token launches on Robinhood Chain and Base with a rug score. Static page plus one serverless function in /api."
+}
