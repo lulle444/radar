@@ -94,3 +94,4 @@ tr.detail td{white-space:normal;background:var(--panel-2)}
 .how p,.how li{max-width:72ch}
 .how ul{padding-left:20px}
 .foot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);padding-block:24px 40px;border-top:1px solid var(--line)}
+.warn{background:var(--mid-soft);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:13.5px;margin:0 0 16px;overflow-wrap:anywhere}
