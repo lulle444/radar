@@ -55,7 +55,7 @@ async function load(){
     if (chain !== state.chain) return;
     $("dot").className = "dot off";
     set("status", "Data unavailable");
-    if (!state.data) $("rows").innerHTML = `<tr><td colspan="9" class="empty">Launch data couldn’t be loaded right now. It will retry in a minute.</td></tr>`;
+    if (!state.data) $("rows").innerHTML = `<tr><td colspan="9" class="empty">Launch data couldn’t be loaded right now. It will retry in a minute.<br><small class="muted">${esc(String(e.message || e).replace(/\?.*$/, ""))}</small></td></tr>`;
   }
 }
 

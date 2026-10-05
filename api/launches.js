@@ -6,7 +6,7 @@ module.exports = async function handler(req, res){
   if (!CHAINS[chain]) return res.status(400).json({error: "chain must be robinhood or base"});
   try {
     const data = await launches(chain);
-    res.setHeader("Cache-Control", "public, s-maxage=60, stale-while-revalidate=300");
+    res.setHeader("Cache-Control", "public, s-maxage=120, stale-while-revalidate=600");
     res.status(200).json({updatedAt: new Date().toISOString(), ...data});
   } catch (e) {
     res.setHeader("Cache-Control", "no-store");
