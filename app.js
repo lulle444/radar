@@ -114,7 +114,9 @@ function detail(l){
 function render(){
   renderTiles();
   const rows = filtered();
-  set("note", rows.length ? `${rows.length} of ${state.data.launches.length} new tokens shown. Tap a row for details.` : "");
+  const d = state.data, failed = d.tried && d.checked < d.tried && (d.holderErrors || []).length;
+  set("note", (rows.length ? `${rows.length} of ${d.launches.length} new tokens shown. Tap a row for details.` : "") +
+    (failed ? ` Holder lookups failed for ${d.tried - d.checked} of ${d.tried}: ${d.holderErrors.join(" · ")}` : ""));
   if (!rows.length){ $("rows").innerHTML = `<tr><td colspan="9" class="empty">No launches match these filters.</td></tr>`; return; }
   $("rows").innerHTML = rows.map(l => {
     const ratio = l.buys1h != null && l.sells1h != null ? `${l.buys1h} / ${l.sells1h}` : "–";
