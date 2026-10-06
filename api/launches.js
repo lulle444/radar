@@ -1,9 +1,9 @@
-// New launches for one chain (?chain=robinhood|base), cached at the edge for a minute.
+// New launches for one chain (?chain=robinhood|base|solana), cached at the edge for a minute.
 const {launches, CHAINS} = require("../lib/launches");
 
 module.exports = async function handler(req, res){
   const chain = String((req.query || {}).chain || "robinhood").toLowerCase();
-  if (!CHAINS[chain]) return res.status(400).json({error: "chain must be robinhood or base"});
+  if (!CHAINS[chain]) return res.status(400).json({error: "chain must be robinhood, base or solana"});
   try {
     const data = await launches(chain);
     res.setHeader("Cache-Control", "public, s-maxage=120, stale-while-revalidate=600");

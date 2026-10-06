@@ -2,8 +2,8 @@
 (function(){
 "use strict";
 const REFRESH = 60 * 1000;
-const NAMES = {robinhood: "Robinhood Chain", base: "Base"};
-const GT_NET = {robinhood: null, base: "base"};
+const NAMES = {robinhood: "Robinhood Chain", base: "Base", solana: "Solana"};
+const GT_NET = {robinhood: null, base: "base", solana: "solana"};
 
 const $ = id => document.getElementById(id);
 const set = (id, v) => { const el = $(id); if (el) el.textContent = v; };
@@ -86,7 +86,8 @@ function renderTiles(){
 function riskPill(r){ return `<span class="risk ${r.band}">${r.value}<span class="sr"> out of 100, ${r.band} risk</span></span>`; }
 
 function detail(l){
-  const ex = state.data.explorer, net = GT_NET[state.chain];
+  const ex = state.data.explorer, net = GT_NET[state.chain], paths = state.data.paths || {address: "/address/", token: "/token/"};
+  const auth = v => v ? `<span class="down">Active</span> <span class="mono">${esc(short(v))}</span>` : "Revoked";
   const reasons = l.risk.reasons.filter(x => x.pts > 0);
   return `<tr class="detail"><td colspan="9"><div class="det">
     <div>
@@ -95,8 +96,8 @@ function detail(l){
     </div>
     <dl>
       <dt>Contract</dt><dd class="mono">${esc(short(l.token))}</dd>
-      <dt>Deployer</dt><dd class="mono">${l.dev ? `<a href="${esc(ex)}/address/${esc(l.dev)}" target="_blank" rel="noopener">${esc(short(l.dev))}</a>` : "–"}</dd>
-      <dt>Holders</dt><dd>${l.holders ?? "–"}</dd>
+      <dt>Deployer</dt><dd class="mono">${l.dev ? `<a href="${esc(ex + paths.address + l.dev)}" target="_blank" rel="noopener">${esc(short(l.dev))}</a>` : "–"}</dd>
+      ${"mintAuthority" in l ? `<dt>Mint authority</dt><dd>${auth(l.mintAuthority)}</dd><dt>Freeze authority</dt><dd>${auth(l.freezeAuthority)}</dd>` : `<dt>Holders</dt><dd>${l.holders ?? "–"}</dd>`}
       <dt>In the pool</dt><dd>${pct(l.inPool)}</dd>
       <dt>In other contracts</dt><dd>${pct(l.inContracts)}</dd>
       <dt>Burned</dt><dd>${pct(l.burned)}</dd>
@@ -105,7 +106,7 @@ function detail(l){
     </dl>
     <div class="links">
       ${net ? `<a href="https://www.geckoterminal.com/${esc(net)}/pools/${esc(l.pool)}" target="_blank" rel="noopener">Chart ↗</a>` : ""}
-      <a href="${esc(ex)}/token/${esc(l.token)}" target="_blank" rel="noopener">Explorer ↗</a>
+      <a href="${esc(ex + paths.token + l.token)}" target="_blank" rel="noopener">Explorer ↗</a>
       <button type="button" class="copy" data-copy="${esc(l.token)}">Copy address</button>
     </div>
   </div></td></tr>`;
@@ -117,8 +118,8 @@ function render(){
   const d = state.data, failed = d.tried && d.checked < d.tried && (d.holderErrors || []).length;
   set("note", rows.length ? `${rows.length} of ${d.launches.length} new tokens shown. Tap a row for details.` : "");
   $("warn").hidden = !failed;
-  if (failed) set("warn", d.needsKey
-    ? "Deployer and top-10 shares are missing: the public Blockscout explorer turns away server requests. Set BLOCKSCOUT_API_KEY (free at dev.blockscout.com) in Vercel to switch on holder checks."
+  if (failed) set("warn", d.keyHint
+    ? "Deployer and top-10 shares are missing. " + d.keyHint
     : `Holder lookups failed for ${d.tried - d.checked} of ${d.tried} tokens, so deployer and top-10 shares are missing: ${d.holderErrors.join(" · ")}`);
   if (!rows.length){ $("rows").innerHTML = `<tr><td colspan="9" class="empty">No launches match these filters.</td></tr>`; return; }
   $("rows").innerHTML = rows.map(l => {
